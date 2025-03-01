@@ -5,7 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.config import Config
 
-# Definindo o tamanho fixo da janela
+# Configuração da janela fixa
 Config.set('graphics', 'resizable', False)
 Config.set('graphics', 'width', '300')
 Config.set('graphics', 'height', '400')
@@ -15,13 +15,11 @@ class MyApp(App):
     def build(self):
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        self.label_resultado = Label(text="Resultado: ", font_size='24sp', size_hint=(1, 0.2))
+        self.label_resultado = Label(text="", font_size='24sp', size_hint=(1, 0.2))
         self.layout.add_widget(self.label_resultado)
 
-        # Layout para os botões numéricos e de operações
         self.buttons_layout = GridLayout(cols=4, size_hint=(1, 0.8), spacing=0)
 
-        # Adicionando botões numéricos e de operações na última coluna
         botoes = [
             ('7', self.adicionar_numero), ('8', self.adicionar_numero), ('9', self.adicionar_numero), ('+', self.definir_operacao),
             ('4', self.adicionar_numero), ('5', self.adicionar_numero), ('6', self.adicionar_numero), ('-', self.definir_operacao),
@@ -50,14 +48,14 @@ class MyApp(App):
         self.operador = ""
         self.num1 = ""
         self.num2 = ""
-        self.label_resultado.text = "Resultado: "
+        self.label_resultado.text = ""
 
     def definir_operacao(self, instance):
         if self.input:
             self.num1 = self.input
             self.operador = instance.text
             self.input = ""
-            self.label_resultado.text = self.operador
+            self.label_resultado.text = ""
 
     def calcular(self, instance):
         try:
@@ -66,13 +64,19 @@ class MyApp(App):
                 num1 = float(self.num1)
                 num2 = float(self.num2)
                 resultado = self.realizar_operacao(num1, num2, self.operador)
-                self.label_resultado.text = f"Resultado: {resultado}"
+                
+                # Exibindo o resultado sem casas decimais se for um inteiro
+                if resultado == int(resultado):
+                    resultado = int(resultado)
+                
+                self.label_resultado.text = str(resultado)
+
                 self.input = ""
                 self.operador = ""
                 self.num1 = ""
                 self.num2 = ""
         except ValueError:
-            self.label_resultado.text = "Erro: Entrada inválida."
+            self.label_resultado.text = "Erro"
 
     def realizar_operacao(self, num1, num2, operador):
         if operador == "+":
@@ -85,9 +89,9 @@ class MyApp(App):
             if num2 != 0:
                 return num1 / num2
             else:
-                return "Erro: Não é possível dividir por zero."
+                return "Erro: Divisão por zero"
         else:
-            return "Erro: Operação inválida."
+            return "Erro: Operação inválida"
 
 if __name__ == "__main__":
     MyApp().run()
