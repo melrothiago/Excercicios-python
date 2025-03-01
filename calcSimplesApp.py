@@ -14,7 +14,7 @@ class MyApp(App):
 
     def build(self):
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
-
+        self.title = "Calculadora"
         self.label_resultado = Label(text="", font_size='24sp', size_hint=(1, 0.2))
         self.layout.add_widget(self.label_resultado)
 
